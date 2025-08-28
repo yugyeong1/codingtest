@@ -14,7 +14,6 @@ area = [
             [8, 9, 5, 2, 7]
         ]
 
-
 dx = [-1, 1, 0, 0]
 dy = [0, 0, -1, 1]
 def bfs(x, y, height, visited, area):
@@ -23,32 +22,32 @@ def bfs(x, y, height, visited, area):
     visited[x][y] = True
     
     while queue:
-        x, y = queue.popleft()
-        
+        x, y =  queue.popleft()
+
         for i in range(4):
             nx = x + dx[i]
             ny = y + dy[i]
             
-            if (nx >= 0 and nx < n) and (ny >= 0 and ny < n):
-                if area[nx][ny] > height and not visited[nx][ny]:
-                    visited[nx][ny] = True
-                    queue.append((nx, ny))
+            if nx < 0 or nx >= n or ny < 0 or ny >= n:
+                continue
+            
+            if not visited[nx][ny] and area[nx][ny] > height:
+                visited[nx][ny] = True
+                queue.append((nx, ny))
 
-# 0 ~ 최대 높이까지 for문을 돌면서 현재 높이보다 높은 영역이 몇 개 있는지 확인
-# 그리고 그 중 가장 큰 값을 리턴
-max_length = max(max(row) for row in area)
+
+# 0 ~ 최고 높이까지를 돌면서 h 보다 큰 영역의 수 중 가장 큰 값
+max_height = max(max(row) for row in area)
 result = 0
 
-for height in range(0, max_length + 1):
-    visited = [[False] * n for i in range(n)]
-    count = 0    
-    
+for height in range(0, max_height + 1):
+    visited = [[False] * n for _ in range(n)]
+    count = 0
     for i in range(n):
         for j in range(n):
             if not visited[i][j] and area[i][j] > height:
                 bfs(i, j, height, visited, area)
                 count += 1
-                
-    result = max(count, result)
-
+    result = max(result, count)
+    
 print(result)
